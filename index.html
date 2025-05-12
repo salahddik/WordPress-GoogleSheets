@@ -1,0 +1,48 @@
+<form id="wp-contact-form">
+  <input type="text" name="name" placeholder="Name" required />
+  <input type="email" name="email" placeholder="Email" required />
+  <textarea name="message" placeholder="Message" required></textarea>
+  <button type="submit">Send</button>
+  <p id="form-status" style="display:none; color: green; margin-top: 10px;">Message sent successfully!</p>
+</form>
+
+<script>
+  const REDIRECT_ENABLED = true; // Turn off if you don't want redirect
+  const REDIRECT_URL = '/thank-you'; // Can be a full URL
+
+  document.getElementById('wp-contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const statusMsg = document.getElementById('form-status');
+
+    const data = {
+      name: form.name.value,
+      email: form.email.value,
+      message: form.message.value
+    };
+
+    // Submit the form
+    fetch('https://script.google.com/macros/s/AKfycbyKPUS8T-OpHNd_ouom6RfHTZYdr69pNgkdz2EDOF6DI7EzJxYlG5VLrNfQI403pdOFmg/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    // Show message
+    form.reset();
+    statusMsg.style.display = 'block';
+
+    // Wait and redirect
+    setTimeout(() => {
+      if (REDIRECT_ENABLED) {
+        window.location.href = REDIRECT_URL;
+      } else {
+        statusMsg.style.display = 'none';
+      }
+    }, 3000); // Wait 3 seconds before redirecting
+  });
+</script>
